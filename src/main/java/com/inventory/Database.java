@@ -11,7 +11,6 @@ public class Database {
 
     Connection connection = null;
     Statement statement = null;
-    ResultSet resultSet = null;
 
     public void getConnection() {
         try {
@@ -33,7 +32,7 @@ public class Database {
         return sql;
     }
 
-    // adds or removes location
+    // adds, removes, or selects location
     public String buildSQL(String action, String section, String shelf) {
         String sql = "";
         switch (action) {
@@ -47,9 +46,6 @@ public class Database {
         return sql;
     }
 
-    // adds item to location
-
-
     public int runSql(String sql) {
         int rowsAffected = 0;
         getConnection();
@@ -60,15 +56,28 @@ public class Database {
             rowsAffected = statement.executeUpdate(sql);
         } catch (SQLException SQLe) {
             SQLe.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
+
         return rowsAffected;
     }
 
-    // selects location
+    // gets location id
     public int getLocationId(String sql) {
-        ResultSet resultSet;
+        ResultSet resultSet = null;
         int locationId = 0;
-        Location location = new Location();
         getConnection();
 
         try {
@@ -81,6 +90,22 @@ public class Database {
             }
         } catch (SQLException SQLe) {
             SQLe.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
         return locationId;
     }
