@@ -16,5 +16,6 @@ CREATE TABLE locations (
 CREATE TABLE item_locations (
     item_id int(11) NOT NULL,
     location_id int(11) NOT NULL,
+    active int(1) NOT NULL,
     PRIMARY KEY (item_id, location_id)
 );
