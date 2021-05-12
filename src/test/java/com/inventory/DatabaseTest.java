@@ -1,5 +1,6 @@
 package com.inventory;
 
+import com.entity.*;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class DatabaseTest extends TestCase {
 
     public void testAddItem() {
         Database database = new Database();
-        String sql = database.buildSQL("testItem", "9.99", 10);
+        String sql = database.buildSQL("Pencil", "0.50", 10);
         int rows = database.runSql(sql);
         System.out.println(rows);
         assertFalse(rows < 1);
@@ -33,8 +34,15 @@ public class DatabaseTest extends TestCase {
     public void testSelectLocation() {
         Database database = new Database();
         String sql = database.buildSQL("select", "B", "7");
-        int id = database.getLocationId(sql);
-        System.out.println(id);
-        assertEquals(1, 1);
+        Location location = database.getLocationId(sql);
+        System.out.println(location);
+        assertEquals(1, location.getId());
+    }
+
+    public void testSearchItem() {
+        Database database = new Database();
+        ArrayList<Item> items = database.searchItem("Pen");
+        System.out.println(items);
+
     }
 }

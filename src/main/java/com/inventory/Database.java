@@ -32,6 +32,12 @@ public class Database {
         return sql;
     }
 
+    // searches for item by name
+    public String buildSQL(String search) {
+        String sql = "SELECT * FROM items WHERE name LIKE '%" + search + "%'";
+        return sql;
+    }
+
     // adds, removes, or selects location
     public String buildSQL(String action, String section, String shelf) {
         String sql = "";
@@ -75,18 +81,20 @@ public class Database {
     }
 
     // gets location id
-    public int getLocationId(String sql) {
+    public Location getLocationId(String sql) {
         ResultSet resultSet = null;
+        Location location = new Location();
         int locationId = 0;
         getConnection();
 
         try {
             Statement statement = connection.createStatement();
-
             resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                locationId = resultSet.getInt("id");
+                location.setId(resultSet.getInt("id"));
+                location.setSection(resultSet.getString("section"));
+                location.setShelf(resultSet.getString("shelf"));
             }
         } catch (SQLException SQLe) {
             SQLe.printStackTrace();
@@ -107,8 +115,35 @@ public class Database {
                 exception.printStackTrace();
             }
         }
-        return locationId;
+        return location;
     }
+
+    // item search by name
+    public ArrayList<Item> searchItem(String search) {
+        ResultSet resultSet = null;
+        Item item = new Item();
+        ArrayList<Item> items = new ArrayList<>();
+        getConnection();
+
+        String sql = buildSQL(search);
+
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                item.setId(resultSet.getInt("id"));
+                item.setName(resultSet.getString("name"));
+                item.setPrice(resultSet.getString("price"));
+                item.setQuantity(resultSet.getInt("quantity"));
+                items.add(item);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return items;
+    }
+
 
 
 
