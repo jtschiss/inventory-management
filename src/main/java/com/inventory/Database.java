@@ -1,7 +1,11 @@
 package com.inventory;
 
+import com.entity.*;
+
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
+
 
 public class Database {
 
@@ -29,15 +33,25 @@ public class Database {
         return sql;
     }
 
-    // adds location
-    public String buildSQL(String section, String shelf) {
-        String sql = "INSERT INTO locations (section, shelf) VALUES ('" + section + "', '" + shelf + "')";
+    // adds or removes location
+    public String buildSQL(String action, String section, String shelf) {
+        String sql = "";
+        switch (action) {
+            case "add":
+                sql = "INSERT INTO locations (section, shelf) VALUES ('" + section + "', '" + shelf + "')";
+                break;
+            case "select":
+                sql = "SELECT * FROM locations WHERE section='" + section + "' AND shelf='" + shelf + "'";
+        }
+
         return sql;
     }
 
+    // adds item to location
+
+
     public int runSql(String sql) {
         int rowsAffected = 0;
-
         getConnection();
 
         try {
@@ -49,6 +63,29 @@ public class Database {
         }
         return rowsAffected;
     }
+
+    // selects location
+    public int getLocationId(String sql) {
+        ResultSet resultSet;
+        int locationId = 0;
+        Location location = new Location();
+        getConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                locationId = resultSet.getInt("id");
+            }
+        } catch (SQLException SQLe) {
+            SQLe.printStackTrace();
+        }
+        return locationId;
+    }
+
+
 
 
 }

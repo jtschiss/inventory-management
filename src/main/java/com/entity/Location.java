@@ -32,4 +32,13 @@ public class Location {
     public void setShelf(String shelf) {
         this.shelf = shelf;
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "id=" + id +
+                ", section='" + section + '\'' +
+                ", shelf='" + shelf + '\'' +
+                '}';
+    }
 }
