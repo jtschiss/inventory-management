@@ -34,6 +34,10 @@ public class ItemData extends HttpServlet {
 
         req.setAttribute("item", item);
 
+        ArrayList<Location> locations = database.getActiveItemLocations(item);
+
+        req.setAttribute("locations", locations);
+
         RequestDispatcher dispatcher = req.getRequestDispatcher("/itemData.jsp");
         dispatcher.forward(req, resp);
     }

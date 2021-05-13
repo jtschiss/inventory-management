@@ -31,7 +31,7 @@ public class DatabaseTest extends TestCase {
 
     public void testAddLocaiton() {
         Database database = new Database();
-        String sql = database.buildSQL("add", "B", "7");
+        String sql = database.buildSQL("add", "F", "16");
         int rows = database.runSql(sql);
         System.out.println(rows);
         assertTrue(rows == 0 || rows == 1);
@@ -55,7 +55,7 @@ public class DatabaseTest extends TestCase {
     public void testAddItemToLocation() {
         Database database = new Database();
         ArrayList<Item> items = database.searchItem("ball");
-        String sql = database.buildSQL("select", "B", "7");
+        String sql = database.buildSQL("select", "F", "16");
         Location location = database.getLocation(sql);
         sql = database.buildSQL("add", items.get(0), location);
         int rowsAffected = database.runSql(sql);
@@ -99,5 +99,13 @@ public class DatabaseTest extends TestCase {
         int rowsAffected = database.removeItemFromLocation(item, location);
         System.out.println(rowsAffected);
         assertTrue(rowsAffected == 1 || rowsAffected == 0);
+    }
+
+    public void testGetAllItemLocations() {
+        Database database = new Database();
+        String sql = database.buildSQL("item", 2);
+        Item item = database.getItemById(sql);
+        ArrayList<Location> locations = database.getActiveItemLocations(item);
+        System.out.println(locations);
     }
 }

@@ -47,7 +47,8 @@ public class Database {
                 sql = buildSQL("select", section, shelf);
                 Location location = getLocation(sql);
                 sql = "";
-                if(location == null) {
+                System.out.println(location);
+                if(location.getSection() == null) {
                     sql = "INSERT INTO locations (section, shelf) VALUES ('" + section + "', '" + shelf + "')";
                 } else {
                     sql = "";
@@ -92,6 +93,12 @@ public class Database {
 
         }
 
+        return sql;
+    }
+
+    // gets all active locations for a given item
+    public String buildSQL(Item item) {
+        String sql = "SELECT * FROM item_locations WHERE active=1 AND item_id=" + item.getId();
         return sql;
     }
 
@@ -221,6 +228,33 @@ public class Database {
             rowsAffected = runSql(sql);
         }
         return rowsAffected;
+    }
+
+    // gets all active locations that an item is in
+    public ArrayList<Location> getActiveItemLocations(Item item) {
+        ArrayList<Location> locations = new ArrayList<>();
+        ArrayList<Integer> locationIds = new ArrayList<>();
+        getConnection();
+        String sql = buildSQL(item);
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                locationIds.add(resultSet.getInt("location_id"));
+            }
+
+            for(int locationId : locationIds) {
+                sql = buildSQL("location", locationId);
+                locations.add(getLocation(sql));
+            }
+        } catch (SQLException SQLe) {
+            SQLe.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+
+        return locations;
     }
 
     // closes the connection to the database

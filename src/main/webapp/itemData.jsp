@@ -24,9 +24,8 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="index.jsp">Home</a>
-                    <a class="nav-link" href="#">Features</a>
-                    <a class="nav-link" href="#">Pricing</a>
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    <a class="nav-link" href="addItems.jsp">Add Items</a>
+                    <a class="nav-link" href="addLocations.jsp">Add Locations</a>
                 </div>
             </div>
             <form class="d-flex" method="post" action="${pageContext.request.contextPath}/ItemSearch">
@@ -44,7 +43,7 @@
     <div class="container align-items-center">
 
 
-        <div class="row mb-3">
+        <div class="row mb-3 mt-3">
             <table class="table">
                 <tbody>
                 <c:if test="${requestScope.item != null}">
@@ -63,6 +62,35 @@
                     <tr>
                         <th scope="row">Quantity</th>
                         <td>${requestScope.item.quantity}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Locations</th>
+                        <td>
+                            <c:if test="${requestScope.item != null}">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="row">Section</th>
+                                            <th scope="row">Shelf</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:if test="${requestScope.locations != null}">
+                                            <c:if test="${requestScope.locations.size() > 0}">
+                                                <c:forEach var="location" items="${requestScope.locations}">
+                                                    <tr>
+                                                        <th scope="row">${location.section}</th>
+                                                        <th scope="row">${location.shelf}</th>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:if>
+                                        </c:if>
+                                    </tbody>
+
+                                </table>
+
+                            </c:if>
+                        </td>
                     </tr>
                 </c:if>
 
