@@ -84,4 +84,15 @@ public class DatabaseTest extends TestCase {
         assertEquals(2, itemLocation.getItemId());
         assertEquals(1, itemLocation.getLocationId());
     }
+
+    public void testUpdateItemLocation() {
+        Database database = new Database();
+        String sql = database.buildSQL("location", 1);
+        Location location = database.getLocation(sql);
+        sql = database.buildSQL("item", 2);
+        Item item = database.getItemById(sql);
+        int rowsAffected = database.removeItemFromLocation(item, location);
+        System.out.println(rowsAffected);
+        assertTrue(rowsAffected == 1 || rowsAffected == 0);
+    }
 }
