@@ -90,10 +90,10 @@
 
                             <form class="d-flex" method="post" action="${pageContext.request.contextPath}/addItemToLocation">
                                 <div class="col-auto">
-                                    <input type="text" name="section" placeholder="Section" class="form-control">
+                                    <input type="text" name="section" placeholder="Section" class="form-control" required>
                                 </div>
                                 <div class="col-auto">
-                                    <input type="text" name="shelf" placeholder="Shelf" class="form-control">
+                                    <input type="text" name="shelf" placeholder="Shelf" class="form-control" required>
                                 </div>
                                 <div class="col-auto">
                                     <input type="hidden" name="id" value="${requestScope.item.id}">

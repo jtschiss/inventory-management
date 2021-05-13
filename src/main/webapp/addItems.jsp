@@ -42,7 +42,27 @@
 
 
 <main>
-    <p>content</p>
+    <c:if test="${requestScope.confirmation != null}">
+        <h1 class="success">${requestScope.confirmation}</h1>
+    </c:if>
+
+    <form class="d-flex" method="post" action="${pageContext.request.contextPath}/addItem">
+        <div class="row-auto mt-3">
+            <label class="input-group-text" for="name">Name</label>
+            <input type="text" name="name" id="name" placeholder="Name" class="form-control" required>
+        </div>
+        <div class="row-auto mt-3">
+            <label class="input-group-text" for="price">Price</label>
+            <input type="text" id="price" name="price" placeholder="x.xx" class="form-control" pattern="^\d{1,5}\.\d\d$" required>
+        </div>
+        <div class="row-auto mt-3">
+            <label class="input-group-text" for="quantity">Quantity</label>
+            <input type="text" name="quantity" id="quantity" placeholder="Numerical values only" pattern="^\d+$" class="form-control" required>
+        </div>
+        <div class="row-auto mt-3">
+            <button type="submit" class="btn btn-dark">Add Item</button>
+        </div>
+    </form>
 
 
 </main>
