@@ -66,30 +66,29 @@
                     <tr>
                         <th scope="row">Locations</th>
                         <td>
-                            <c:if test="${requestScope.item != null}">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="row">Section</th>
-                                            <th scope="row">Shelf</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+
                                         <c:if test="${requestScope.locations != null}">
                                             <c:if test="${requestScope.locations.size() > 0}">
-                                                <c:forEach var="location" items="${requestScope.locations}">
-                                                    <tr>
-                                                        <th scope="row">${location.section}</th>
-                                                        <th scope="row">${location.shelf}</th>
-                                                    </tr>
-                                                </c:forEach>
+                                            <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="row">Section</th>
+                                                            <th scope="row">Shelf</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach var="location" items="${requestScope.locations}">
+                                                            <tr>
+                                                                <td>${location.section}</td>
+                                                                <td>${location.shelf}</td>
+                                                                <td><a href="${pageContext.request.contextPath}/deleteLocation?location_id=${location.id}&item_id=${item.id}">Delete</a></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                </tbody>
+                                            </table>
                                             </c:if>
                                         </c:if>
-                                    </tbody>
 
-                                </table>
-
-                            </c:if>
                         </td>
                     </tr>
                 </c:if>

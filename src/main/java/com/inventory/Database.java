@@ -222,7 +222,7 @@ public class Database {
         int rowsAffected = 0;
         String sql = buildSQL("select", item, location);
         ItemLocation itemLocation = getItemLocation(sql);
-        if(item.getId() != 0) {
+        if(itemLocation.getItemId() != 0) {
             sql = "UPDATE item_locations SET active=0 WHERE item_id=" + item.getId() + " AND location_id="
                     + location.getId();
             rowsAffected = runSql(sql);
