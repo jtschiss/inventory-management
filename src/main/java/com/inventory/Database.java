@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 public class Database {
 
-    Connection connection = null;
-    Statement statement = null;
+    private Connection connection = null;
+    private Statement statement = null;
+    private ResultSet resultSet = null;
 
     public void getConnection() {
         try {
@@ -43,48 +44,80 @@ public class Database {
         String sql = "";
         switch (action) {
             case "add":
-                sql = "INSERT INTO locations (section, shelf) VALUES ('" + section + "', '" + shelf + "')";
+                sql = buildSQL("select", section, shelf);
+                Location location = getLocation(sql);
+                sql = "";
+                if(location == null) {
+                    sql = "INSERT INTO locations (section, shelf) VALUES ('" + section + "', '" + shelf + "')";
+                } else {
+                    sql = "";
+                }
                 break;
             case "select":
                 sql = "SELECT * FROM locations WHERE section='" + section + "' AND shelf='" + shelf + "'";
+        }
+        return sql;
+    }
+
+    // adds, removes, or selects location
+    public String buildSQL(String object, int id) {
+        String sql = "";
+        switch (object) {
+            case "item":
+                sql = "SELECT * FROM items WHERE id='" + id + "'";
+                break;
+            case "location":
+                sql = "SELECT * FROM locations WHERE id='" + id + "'";
+        }
+        return sql;
+    }
+
+    // add item to location
+    public String buildSQL(String action, Item item, Location location) {
+        String sql = "";
+        switch (action){
+            case "add":
+                sql = buildSQL("select", item, location);
+                ItemLocation itemLocation = getItemLocation(sql);
+                sql = "";
+                if(itemLocation.getItemId() == 0) {
+                    sql = "INSERT INTO item_locations (item_id, location_id) VALUES (" + item.getId() + ", "
+                            + location.getId() + ")";
+                }
+                break;
+            case "select":
+                    sql = "SELECT * FROM item_locations WHERE item_id=" + item.getId() + " AND location_id="
+                            + location.getId() + "";
+                    break;
+
         }
 
         return sql;
     }
 
+    // runs a given sql statement using executeUpdate()
     public int runSql(String sql) {
         int rowsAffected = 0;
-        getConnection();
+        if(!sql.equals("")) {
+            getConnection();
 
-        try {
-            Statement statement = connection.createStatement();
-
-            rowsAffected = statement.executeUpdate(sql);
-        } catch (SQLException SQLe) {
-            SQLe.printStackTrace();
-        } finally {
             try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
-            } catch (Exception exception) {
-                exception.printStackTrace();
+                Statement statement = connection.createStatement();
+
+                rowsAffected = statement.executeUpdate(sql);
+            } catch (SQLException SQLe) {
+                SQLe.printStackTrace();
+            } finally {
+                closeConnection();
             }
         }
 
         return rowsAffected;
     }
 
-    // gets location id
-    public Location getLocationId(String sql) {
-        ResultSet resultSet = null;
+    // gets location
+    public Location getLocation(String sql) {
         Location location = new Location();
-        int locationId = 0;
         getConnection();
 
         try {
@@ -99,28 +132,36 @@ public class Database {
         } catch (SQLException SQLe) {
             SQLe.printStackTrace();
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+            closeConnection();
         }
         return location;
     }
 
+    // searched for the item by id
+    public Item getItemById(String sql) {
+        Item item = new Item();
+        getConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                item.setId(resultSet.getInt("id"));
+                item.setName(resultSet.getString("name"));
+                item.setPrice(resultSet.getString("price"));
+                item.setQuantity(resultSet.getInt("quantity"));
+            }
+        } catch (SQLException SQLe) {
+            SQLe.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return item;
+    }
+
     // item search by name
     public ArrayList<Item> searchItem(String search) {
-        ResultSet resultSet = null;
         Item item = new Item();
         ArrayList<Item> items = new ArrayList<>();
         getConnection();
@@ -140,12 +181,55 @@ public class Database {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return items;
+    }
+
+    // gets itemLocation
+    public ItemLocation getItemLocation(String sql) {
+        getConnection();
+        ItemLocation itemLocation = new ItemLocation();
+
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                itemLocation.setItemId(resultSet.getInt("item_id"));
+                itemLocation.setLocationId(resultSet.getInt("location_id"));
+                itemLocation.setActive(resultSet.getInt("active"));
+            }
+        } catch (SQLException SQLe) {
+            SQLe.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return itemLocation;
     }
 
 
 
 
+    // closes the connection to the database
+    public void closeConnection() {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
 
+            if (statement != null) {
+                statement.close();
+            }
+
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
 }
