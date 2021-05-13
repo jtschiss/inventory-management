@@ -60,7 +60,7 @@ public class Database {
         return sql;
     }
 
-    // adds, removes, or selects location
+    // Selects item or location
     public String buildSQL(String object, int id) {
         String sql = "";
         switch (object) {
@@ -225,6 +225,17 @@ public class Database {
         if(itemLocation.getItemId() != 0) {
             sql = "UPDATE item_locations SET active=0 WHERE item_id=" + item.getId() + " AND location_id="
                     + location.getId();
+            rowsAffected = runSql(sql);
+        }
+        return rowsAffected;
+    }
+
+    // activate itemLocation
+    public int activateItemLocation(ItemLocation itemLocation) {
+        int rowsAffected = 0;
+        if(itemLocation.getItemId() != 0) {
+            String sql = "UPDATE item_locations SET active=1 WHERE item_id=" + itemLocation.getItemId() + " AND location_id="
+                    + itemLocation.getLocationId();
             rowsAffected = runSql(sql);
         }
         return rowsAffected;
