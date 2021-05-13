@@ -162,7 +162,7 @@ public class Database {
 
     // item search by name
     public ArrayList<Item> searchItem(String search) {
-        Item item = new Item();
+        Item item = null;
         ArrayList<Item> items = new ArrayList<>();
         getConnection();
 
@@ -173,6 +173,7 @@ public class Database {
             resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
+                item = new Item();
                 item.setId(resultSet.getInt("id"));
                 item.setName(resultSet.getString("name"));
                 item.setPrice(resultSet.getString("price"));
@@ -222,20 +223,15 @@ public class Database {
         return rowsAffected;
     }
 
-
-
-
     // closes the connection to the database
     public void closeConnection() {
         try {
             if (resultSet != null) {
                 resultSet.close();
             }
-
             if (statement != null) {
                 statement.close();
             }
-
             if (connection != null) {
                 connection.close();
             }

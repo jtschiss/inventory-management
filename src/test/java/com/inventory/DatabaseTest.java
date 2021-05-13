@@ -16,6 +16,9 @@ public class DatabaseTest extends TestCase {
         database.getConnection();
     }
 
+    /*
+    Commented out to prevent flooding the database with Pencils
+
     public void testAddItem() {
         Database database = new Database();
         String sql = database.buildSQL("Pencil", "0.50", 10);
@@ -23,6 +26,8 @@ public class DatabaseTest extends TestCase {
         System.out.println(rows);
         assertFalse(rows < 1);
     }
+
+     */
 
     public void testAddLocaiton() {
         Database database = new Database();
