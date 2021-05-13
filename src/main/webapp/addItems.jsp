@@ -26,7 +26,6 @@
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="index.jsp">Home</a>
                 <a class="nav-link" href="addItems.jsp">Add Items</a>
-                <a class="nav-link" href="addLocations.jsp">Add Locations</a>
             </div>
         </div>
         <form class="d-flex" method="post" action="${pageContext.request.contextPath}/ItemSearch">
