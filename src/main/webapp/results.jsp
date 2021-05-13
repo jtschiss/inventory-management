@@ -33,7 +33,7 @@
                     <c:forEach var="item" items="${requestScope.results}">
                         <tr>
                             <th scope="row">${item.id}</th>
-                            <th scope="row">${item.name}</th>
+                            <th scope="row"><a href="${pageContext.request.contextPath}/itemData?id=${item.id}">${item.name}</a></th>
                             <th scope="row">$${item.price}</th>
                             <th scope="row">${item.quantity}</th>
                         </tr>

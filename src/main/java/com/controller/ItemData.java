@@ -9,10 +9,10 @@ import com.inventory.Database;
 import com.entity.*;
 
 @WebServlet(
-        name = "itemSearch",
-        urlPatterns = { "/itemSearch", "/ItemSearch" }
+        name = "itemData",
+        urlPatterns = { "/itemData", "/ItemData" }
 )
-public class ItemSearch extends HttpServlet {
+public class ItemData extends HttpServlet {
 
     /**
      *  Handles HTTP GET requests.
@@ -22,17 +22,19 @@ public class ItemSearch extends HttpServlet {
      *@exception  ServletException  if there is a Servlet failure
      *@exception  IOException       if there is an IO failure
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse resp)
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         Database database = new Database();
-        String search = req.getParameter("search");
+        String parameter = req.getParameter("id");
+        int id = Integer.parseInt(parameter);
 
-        ArrayList<Item> results = database.searchItem(search);
+        String sql = database.buildSQL("item", id);
+        Item item = database.getItemById(sql);
 
-        req.setAttribute("results", results);
+        req.setAttribute("item", item);
 
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/results.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/itemData.jsp");
         dispatcher.forward(req, resp);
     }
 
