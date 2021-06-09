@@ -60,7 +60,21 @@
                     </tr>
                     <tr>
                         <th scope="row">Quantity</th>
-                        <td>${requestScope.item.quantity}</td>
+                        <td>
+                            <form class="d-flex" method="post" action="${pageContext.request.contextPath}/updateQuantity">
+                                <div class="col-auto">
+                                    <input type="text" name="quantity" value="${requestScope.item.quantity}" class="form-control" required>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="hidden" name="id" value="${requestScope.item.id}">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-dark">Update Quantity</button>
+                                </div>
+                            </form>
+
+
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Locations</th>

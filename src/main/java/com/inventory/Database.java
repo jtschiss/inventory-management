@@ -268,6 +268,14 @@ public class Database {
         return locations;
     }
 
+    // updates the quantity of an item
+    public int updateQuantity(Item item, int quantity) {
+        int rowsAffected = 0;
+        String sql = "UPDATE items SET quantity = " + quantity + " WHERE id = " + item.getId();
+        rowsAffected = runSql(sql);
+        return rowsAffected;
+    }
+
     // closes the connection to the database
     public void closeConnection() {
         try {
